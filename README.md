@@ -1,5 +1,9 @@
 # claude-pm-os — a PM Operating System on Claude Code
 
+[![evals](https://github.com/smbochkarev1/claude-pm-os/actions/workflows/evals.yml/badge.svg)](https://github.com/smbochkarev1/claude-pm-os/actions/workflows/evals.yml)
+&nbsp;![python](https://img.shields.io/badge/python-3.12-blue)
+&nbsp;![license](https://img.shields.io/badge/license-MIT-green)
+
 A personal, reusable orchestration layer that turns a product manager's scattered
 tools — tracker, calendar, spreadsheets, chat, meeting transcripts — into one
 daily loop: an evening **debrief**, a morning **recap**, a weekly roll-up, one

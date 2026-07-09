@@ -100,7 +100,12 @@ Author's personal results running this daily:
 
 - **300+ tasks** consolidated into one deduped, prioritized backlog that used to
   live across five spreadsheets and several tracker queues.
-- **~20–30 hours/week** of manual status-chasing and reconciliation removed.
+- Automates **the equivalent of ~20–30 hours/week of manual work** — not personal
+  time saved, but work that would otherwise be done by hand. Where the hours come from:
+  - *Cross-source backlog:* reconciling 5 spreadsheets + several tracker queues by hand ≈ **6–8 h/week** → now a ~15-minute review of the generated diff.
+  - *Daily debrief + weekly roll-up:* manually re-reading tracker/calendar/chat and writing status ≈ **5–7 h/week** → auto-drafted, you edit.
+  - *Post-meeting follow-ups:* re-watching transcripts and extracting action items ≈ **4–6 h/week** → extracted automatically.
+  - *Meeting prep + misc sync:* ≈ **5–8 h/week**.
 - A debrief every working day, with zero gaps thanks to the midnight fallback.
 
 (Personal case, not a benchmark — your mileage depends on your stack and habits.)

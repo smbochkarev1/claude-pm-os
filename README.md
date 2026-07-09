@@ -110,7 +110,32 @@ Author's personal results running this daily:
 
 (Personal case, not a benchmark — your mileage depends on your stack and habits.)
 
-## 5. Quickstart
+## 5. Example output
+
+What the system actually produces, on a fully synthetic PM's day (no real people,
+tickets, or data — generic `Acme checkout`, `Jordan`, `PAY-142`). These are the
+same file formats a real run writes to `debriefs/`, the backlog sheet, and the
+weekly roll-up:
+
+- [`examples/sample-output/debrief-2026-03-14.md`](examples/sample-output/debrief-2026-03-14.md) — an evening debrief: the six buckets, each bullet carrying an inline source tag.
+- [`examples/sample-output/recap-2026-03-15.md`](examples/sample-output/recap-2026-03-15.md) — the next morning's recap, reconciled against the debrief (closed items dropped, waiting-vs-ping resolved).
+- [`examples/sample-output/weekly-2026-W11.md`](examples/sample-output/weekly-2026-W11.md) — the weekly roll-up: achievements, chronic items, decisions changelog, recurring risks, patterns.
+- [`examples/sample-output/backlog-sample.csv`](examples/sample-output/backlog-sample.csv) — a slice of the deduped, prioritized cross-source backlog (`BL-NNN` ids, merged `source` column showing where each row came from).
+
+A debrief opens like this — outcome-first, every line traceable to its source:
+
+```markdown
+## Done today
+- Shipped the retry-on-decline flow for card payments to 20% of traffic [PAY-142]
+- Closed the duplicate-charge investigation — root cause was a stale idempotency key, fix merged [PAY-138]
+- Sent the finalized Q1 checkout scorecard to the Acme checkout team [chat / "Checkout squad" / msg 17:40]
+
+## Owed by me — not done today
+- I'll draft the rollback criteria for the retry-on-decline rollout before we go to 50% [PAY-142]
+- I'll check the mobile tax-calculation edge case Dana flagged and reply in-thread [chat / "Payments infra" / msg 15:02]
+```
+
+## 6. Quickstart
 
 ```bash
 git clone <your-fork> claude-pm-os && cd claude-pm-os
@@ -129,7 +154,7 @@ Then hand the repo to Claude Code:
 Claude reads the stubs, implements the adapters for your stack, and drives the
 `commands/` from there.
 
-## 6. Team use
+## 7. Team use
 
 A teammate installs their own copy — **no access to anyone else's data**:
 
@@ -143,7 +168,7 @@ and `scripts/build_dist.sh` is a leak guard that fails if a secret shape or
 tracked `.env` slips in. The `metrics_watch` worker is the one shared-channel
 touchpoint, and even that points at a chat id you choose.
 
-## 7. Eval harness
+## 8. Eval harness
 
 Classification quality and dedup correctness are the two things that must not
 silently regress, so they're measured — deterministically, with no LLM key:
@@ -160,7 +185,7 @@ python eval-harness/run_evals.py
 Add a fixture + golden pair whenever you hit a real misclassification; the
 harness turns "it felt wrong" into a regression test.
 
-## 8. Design decisions
+## 9. Design decisions
 
 - **Adapters over integrations.** A PM's stack is personal. Engines depend only
   on small interfaces (`adapters/base.py`); swapping Jira→Linear is one adapter,

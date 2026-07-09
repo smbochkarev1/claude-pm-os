@@ -1,0 +1,11 @@
+id,stream,task,status,priority,owner,deadline,ticket,effect,source
+BL-001,Checkout,Retry-on-decline rollout to 50% (rollback criteria first),In progress,P1,me,2026-03-20,PAY-142,+2.1% auth rate,Roadmap / Q1 ; Tracker
+BL-002,Checkout,Stored-card retention wording (legal sign-off),Blocked,P1,me,2026-03-27,CHK-90,Compliance,Backlog / Payments ; Debrief
+BL-003,Checkout,Express-pay banner experiment (two-week run),In progress,P2,Riley,2026-03-24,CHK-88,+0.8% conversion,Roadmap / Q1 ; Tracker
+BL-004,Payments,New payment gateway cutover (pending load test),At risk,P1,Marco,2026-03-25,PAY-160,Cost -12%,Backlog / Payments ; Tracker
+BL-005,Payments,Wallet-provider switch one-pager,In progress,P2,me,2026-03-18,PAY-155,Enablement,Debrief
+BL-006,Payments,Deprecate legacy redirect flow (after wallet migration),Planned,P3,Alex,2026-04-10,PAY-171,Tech debt,Backlog / Payments
+BL-007,Growth,Guest-checkout copy finalization,Waiting,P2,Jordan,2026-03-16,GROW-31,+1.4% start rate,Roadmap / Q1 ; Debrief
+BL-008,Growth,Guest-checkout enterprise feature flag decision,Open,P2,Jordan,,GROW-33,Enablement,Debrief
+BL-009,Platform,Standardize idempotency-key scheme across services,In progress,P2,Dana,2026-03-30,PAY-138,Reliability,Tracker
+BL-010,Platform,Mobile tax-calculation edge case,In progress,P3,me,2026-03-19,,Correctness,Payments infra chat ; Debrief

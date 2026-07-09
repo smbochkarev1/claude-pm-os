@@ -1,0 +1,12 @@
+{
+  "expected_row_count": 5,
+  "expected_keys": [
+    "t:PROJ-101",
+    "t:PROJ-200",
+    "n:pricing experiment|Growth",
+    "n:pricing experiment|Payments",
+    "n:security review|Platform"
+  ],
+  "expected_merges": 2,
+  "stream_order": ["Growth", "Payments", "Platform"]
+}

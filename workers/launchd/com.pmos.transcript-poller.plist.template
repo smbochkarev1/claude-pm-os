@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  PM OS — transcript poller. Runs every 15 minutes.
+  Replace ${PM_OS_HOME} with the absolute repo path and fill the env vars,
+  then copy to ~/Library/LaunchAgents/ and `launchctl load` it.
+-->
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>Label</key>
+    <string>com.pmos.transcript-poller</string>
+
+    <key>ProgramArguments</key>
+    <array>
+        <string>/usr/bin/python3</string>
+        <string>${PM_OS_HOME}/workers/transcript_poller.py</string>
+    </array>
+
+    <key>EnvironmentVariables</key>
+    <dict>
+        <key>PM_OS_HOME</key>            <string>${PM_OS_HOME}</string>
+        <key>PM_OS_LLM_API_KEY</key>     <string>${PM_OS_LLM_API_KEY}</string>
+        <key>NOTIFIER_BOT_TOKEN</key>    <string>${NOTIFIER_BOT_TOKEN}</string>
+        <key>NOTIFIER_CHAT_ID</key>      <string>${NOTIFIER_CHAT_ID}</string>
+    </dict>
+
+    <key>StartInterval</key>
+    <integer>900</integer>
+
+    <key>RunAtLoad</key>
+    <true/>
+
+    <key>StandardOutPath</key>
+    <string>${PM_OS_HOME}/cache/transcript-poller.log</string>
+    <key>StandardErrorPath</key>
+    <string>${PM_OS_HOME}/cache/transcript-poller.err</string>
+</dict>
+</plist>

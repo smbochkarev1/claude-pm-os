@@ -1,0 +1,9 @@
+# Core runtime is stdlib-only (adapters use urllib, no SDK).
+# These are needed for the shipped Google Sheets adapter and YAML config.
+PyYAML>=6.0
+
+# Only for adapters.spreadsheet_gspread (Google Sheets). Omit if you don't use it.
+gspread>=6.0.0
+google-auth>=2.23.0
+
+# The eval harness and the LLM/notifier adapters need nothing beyond stdlib.

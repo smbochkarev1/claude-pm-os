@@ -1,0 +1,71 @@
+# Config for the cross-source backlog engine (core/backlog_engine.py).
+# Copy to backlog_sources.yaml and map YOUR spreadsheets.
+#
+# This file isolates all source "dirt" — differing header offsets and column
+# names — from the engine. `columns` values are 0-based column indices in the
+# raw row; `data_start_row` is 1-based (row where real data begins).
+#
+# Spreadsheet IDs are NON-secret keys, but keep the mapping template here and
+# put the actual ids in .env or a private overlay if you prefer.
+
+# Where the assembled backlog is written back (via the Spreadsheet adapter).
+target:
+  spreadsheet_id: "${BACKLOG_TARGET_SHEET_ID}"   # set in .env
+  tabs:
+    backlog: "Backlog"
+    summary: "Stream summary"
+    sync_log: "Sync log"
+
+default_stream: "Other"
+
+# Normalized stream dictionary. `aliases` (lowercase substrings) map raw → key.
+# The order here is the display/priority order in the assembled backlog.
+streams:
+  - key: "Growth"
+    aliases: [growth, activation, onboarding, funnel]
+  - key: "Payments"
+    aliases: [payments, billing, checkout, acquiring]
+  - key: "Platform"
+    aliases: [platform, infra, reliability, security]
+  - key: "Retention"
+    aliases: [retention, churn, "pre-churn", renewal]
+  - key: "Other"
+    aliases: []                  # fallback
+
+# Status normalization: raw substring (lowercase) → canonical key.
+statuses:
+  Backlog:       [backlog, idea, new, "not started"]
+  Planned:       [planned, todo, "to do", "next up", scheduled]
+  "In progress": [wip, "in progress", doing, "in dev", ongoing]
+  Review:        [review, testing, qa, "in review"]
+  Blocked:       [blocked, blocker, "on hold", paused, stop]
+  Done:          [done, closed, resolved, shipped, complete]
+
+# Live tracker enrichment.
+tracker:
+  ticket_url_prefix: "${TRACKER_URL_PREFIX}"   # e.g. https://your-jira/browse/
+
+# Per-source mapping. Only task-bearing tabs are listed; reference/forecast
+# tabs are intentionally omitted.
+sources:
+  - name: growth-backlog
+    label: "Growth backlog"
+    id: "${SHEET_GROWTH_ID}"
+    tabs:
+      - name: "Initiatives"
+        data_start_row: 2
+        default_stream: "Growth"
+        columns: {substream: 1, task: 2, priority: 3, owner: 5, status: 6,
+                  deadline: 7, effect: 8, ticket: 9, comment: 10}
+
+  - name: payments-weekly
+    label: "Payments weekly"
+    id: "${SHEET_PAYMENTS_ID}"
+    tabs:
+      - name: "Status"
+        data_start_row: 5           # header block occupies the first 4 rows
+        default_stream: "Payments"
+        columns: {substream: 1, task: 2, effect: 3, status: 4, owner: 5, ticket: 6}
+
+output:
+  open_questions_path: context/open-questions.md

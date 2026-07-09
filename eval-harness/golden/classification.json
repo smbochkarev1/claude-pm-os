@@ -1,0 +1,17 @@
+{
+  "c01": "done_today",
+  "c02": "done_today",
+  "c03": "done_today",
+  "c04": "owed_by_me",
+  "c05": "owed_by_me",
+  "c06": "owed_by_me",
+  "c07": "waiting_on_others",
+  "c08": "waiting_on_others",
+  "c09": "decisions",
+  "c10": "decisions",
+  "c11": "decisions",
+  "c12": "risks_blockers",
+  "c13": "risks_blockers",
+  "c14": "planned_after_today",
+  "c15": "planned_after_today"
+}

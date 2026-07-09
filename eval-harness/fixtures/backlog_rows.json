@@ -1,0 +1,9 @@
+[
+  {"task": "Onboarding redesign", "stream": "Growth", "status": "In progress", "ticket": "PROJ-101", "priority": "1", "source": "Sheet A / Initiatives"},
+  {"task": "Onboarding redesign v2 rollout", "stream": "Growth", "status": "In progress", "ticket": "PROJ-101", "priority": "1", "source": "Tracker", "owner": "me"},
+  {"task": "Pricing experiment", "stream": "Growth", "status": "Planned", "ticket": "", "priority": "2", "source": "Sheet A / Backlog"},
+  {"task": "Pricing experiment", "stream": "Growth", "status": "Planned", "ticket": "", "priority": "2", "source": "Sheet B / Q3", "effect_mln": 1.5},
+  {"task": "Pricing experiment", "stream": "Payments", "status": "Backlog", "ticket": "", "priority": "3", "source": "Sheet B / Payments"},
+  {"task": "Billing bug hardening", "stream": "Payments", "status": "Review", "ticket": "PROJ-200", "priority": "0", "source": "Tracker"},
+  {"task": "Security review", "stream": "Platform", "status": "Planned", "ticket": "", "priority": "2", "source": "Sheet C"}
+]

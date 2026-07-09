@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  PM OS — metrics watch. Runs hourly during working hours (example: every 2h).
+  Replace ${PM_OS_HOME} with the absolute repo path and fill the env vars,
+  then copy to ~/Library/LaunchAgents/ and `launchctl load` it.
+-->
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>Label</key>
+    <string>com.pmos.metrics-watch</string>
+
+    <key>ProgramArguments</key>
+    <array>
+        <string>/usr/bin/python3</string>
+        <string>${PM_OS_HOME}/workers/metrics_watch.py</string>
+    </array>
+
+    <key>EnvironmentVariables</key>
+    <dict>
+        <key>PM_OS_HOME</key>                    <string>${PM_OS_HOME}</string>
+        <key>PM_OS_METRICS_FRESHNESS_MIN</key>   <string>180</string>
+        <key>NOTIFIER_BOT_TOKEN</key>            <string>${NOTIFIER_BOT_TOKEN}</string>
+        <key>NOTIFIER_CHAT_ID</key>              <string>${NOTIFIER_CHAT_ID}</string>
+    </dict>
+
+    <key>StartInterval</key>
+    <integer>7200</integer>
+
+    <key>StandardOutPath</key>
+    <string>${PM_OS_HOME}/cache/metrics-watch.log</string>
+    <key>StandardErrorPath</key>
+    <string>${PM_OS_HOME}/cache/metrics-watch.err</string>
+</dict>
+</plist>

@@ -1,0 +1,77 @@
+# PM OS — main config. Copy to pm-os.config.yaml and fill in your values.
+# Nothing secret lives here: tokens/ids go in .env (see .env.example).
+# Identity below is used to attribute "mine" vs "others" during classification.
+
+me:
+  # Your handle in your tracker/chat, used to detect your own commitments.
+  name: "<YOUR_HANDLE>"          # e.g. "jdoe" or "@jane"
+  aliases: []                    # other ways you're addressed, e.g. ["jane", "j.doe"]
+  timezone: "Europe/London"
+  working_days: [mon, tue, wed, thu, fri]
+  holidays_file: config/holidays.yaml   # optional; skip debrief on these dates
+
+# Which adapter class backs each source. Point these at your own adapters
+# (start from adapters/stubs/*). The three shipped working adapters are noted.
+sources:
+  tracker:
+    adapter: adapters.stubs.task_tracker:MyTaskTracker   # implement for Jira/Linear/GitHub
+    roles: [assignee, author, follower]
+    queues: []                   # empty = all accessible projects/boards
+    max_tasks: 500
+
+  calendar:
+    adapter: adapters.stubs.calendar:MyCalendar          # implement for Google/Outlook
+    min_duration_minutes: 15
+    fetch_transcripts: true
+
+  chat:
+    adapter: adapters.stubs.chat_source:MyChatSource     # implement for Slack/Telegram
+    max_messages_per_chat: 50
+    activity_hours: 24
+
+  transcript:
+    adapter: adapters.stubs.transcript:MyTranscriptSource  # implement for Zoom/Meet
+    retry_hours: 48
+
+  sheets:
+    adapter: adapters.spreadsheet_gspread:GspreadSpreadsheet   # SHIPPED (Google Sheets)
+    # ids referenced by config/backlog_sources.yaml
+
+notifier:
+  adapter: adapters.notifier_telegram:TelegramNotifier         # SHIPPED (Telegram Bot API)
+  # token/chat id come from NOTIFIER_BOT_TOKEN / NOTIFIER_CHAT_ID in .env
+
+llm:
+  adapter: adapters.llm:HttpLLM                                # SHIPPED (Anthropic/OpenAI)
+  # provider/key/base_url/model come from PM_OS_LLM_* in .env
+  heavy_commands: [debrief, debrief_week]     # want a strong model
+  light_commands: [recap, recap_week]         # a cheap model is fine
+
+# Six buckets the debrief classifies into. Signals are lowercase substrings;
+# extend them as you spot misclassifications (they only assist the LLM/signal layer).
+buckets:
+  enabled:
+    - done_today
+    - owed_by_me
+    - waiting_on_others
+    - decisions
+    - risks_blockers
+    - planned_after_today
+
+signals:
+  done_today:      [done, closed, shipped, sent, merged, resolved, finished]
+  owed_by_me:      ["i'll", "i will", "my task", "on me", "i'll prepare", "i'll check", "i'll send"]
+  waiting_on_others: ["they'll", "he'll", "she'll", promised, "will get back", "will send", "waiting on"]
+  decisions:       [agreed, decided, approved, rejected, finalized, "signed off"]
+  risks_blockers:  [blocker, blocked, risk, slipping, "at risk", "won't make it", escalate]
+  planned_after_today: [tomorrow, "next week", planned, scheduled, upcoming]
+
+output:
+  delivery: notifier            # notifier | none
+  show_full_summary_in_chat: true
+
+# Optional PM context the classifier reads (stakeholders, glossary, deadlines).
+context:
+  enabled: false
+  index_path: context/INDEX.md
+  max_index_chars: 6000

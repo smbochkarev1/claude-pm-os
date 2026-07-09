@@ -1,0 +1,28 @@
+# Secrets & local config
+.env
+config/pm-os.config.yaml
+config/backlog_sources.yaml
+config/holidays.json
+*.token
+*token*.json
+
+# Runtime state (personal data — never commit)
+cache/
+snapshots/
+debriefs/
+followups/
+context/_sources/
+*.log
+*.err
+
+# Python
+.venv/
+venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+
+# OS / editor
+.DS_Store
+.idea/
+.vscode/

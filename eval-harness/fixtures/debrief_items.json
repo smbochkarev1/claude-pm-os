@@ -1,0 +1,17 @@
+[
+  {"id": "c01", "text": "Shipped the onboarding redesign to prod [PROJ-101]", "from_me": true, "source": "tracker"},
+  {"id": "c02", "text": "Closed PROJ-77, resolved the billing bug this afternoon", "from_me": true, "source": "tracker"},
+  {"id": "c03", "text": "Merged the config refactor PR before the sync", "from_me": true, "source": "tracker"},
+  {"id": "c04", "text": "I'll prepare the pricing deck by Thursday", "from_me": true, "source": "chat"},
+  {"id": "c05", "text": "I'll check the API limits and get back to the team", "from_me": true, "source": "chat"},
+  {"id": "c06", "text": "On me: write the incident postmortem", "from_me": true, "source": "note"},
+  {"id": "c07", "text": "Alex promised to send the vendor contract by Friday", "from_me": false, "source": "chat"},
+  {"id": "c08", "text": "They'll deliver the design tokens next Tuesday", "from_me": false, "source": "chat"},
+  {"id": "c09", "text": "We agreed to go with option B for the auth flow", "from_me": null, "source": "meeting"},
+  {"id": "c10", "text": "Approved the Q3 roadmap in the leadership sync", "from_me": null, "source": "meeting"},
+  {"id": "c11", "text": "Finalized the vendor selection with procurement", "from_me": null, "source": "meeting"},
+  {"id": "c12", "text": "The data migration is blocked on the infra team", "from_me": null, "source": "meeting"},
+  {"id": "c13", "text": "Risk: we won't make it to the launch date at this pace", "from_me": false, "source": "chat"},
+  {"id": "c14", "text": "Planned the security review for tomorrow morning", "from_me": true, "source": "note"},
+  {"id": "c15", "text": "Kickoff scheduled with the vendor for the upcoming sprint", "from_me": null, "source": "calendar"}
+]

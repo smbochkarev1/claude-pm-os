@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  PM OS — midnight debrief fallback. Runs at 23:00 Mon-Fri.
+  Replace ${PM_OS_HOME} with the absolute repo path and fill the env vars,
+  then copy to ~/Library/LaunchAgents/ and `launchctl load` it.
+-->
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>Label</key>
+    <string>com.pmos.midnight</string>
+
+    <key>ProgramArguments</key>
+    <array>
+        <string>/usr/bin/python3</string>
+        <string>${PM_OS_HOME}/workers/midnight.py</string>
+    </array>
+
+    <key>EnvironmentVariables</key>
+    <dict>
+        <key>PM_OS_HOME</key>            <string>${PM_OS_HOME}</string>
+        <key>PM_OS_LLM_API_KEY</key>     <string>${PM_OS_LLM_API_KEY}</string>
+        <key>NOTIFIER_BOT_TOKEN</key>    <string>${NOTIFIER_BOT_TOKEN}</string>
+        <key>NOTIFIER_CHAT_ID</key>      <string>${NOTIFIER_CHAT_ID}</string>
+    </dict>
+
+    <key>StartCalendarInterval</key>
+    <array>
+        <dict><key>Weekday</key><integer>1</integer><key>Hour</key><integer>23</integer><key>Minute</key><integer>0</integer></dict>
+        <dict><key>Weekday</key><integer>2</integer><key>Hour</key><integer>23</integer><key>Minute</key><integer>0</integer></dict>
+        <dict><key>Weekday</key><integer>3</integer><key>Hour</key><integer>23</integer><key>Minute</key><integer>0</integer></dict>
+        <dict><key>Weekday</key><integer>4</integer><key>Hour</key><integer>23</integer><key>Minute</key><integer>0</integer></dict>
+        <dict><key>Weekday</key><integer>5</integer><key>Hour</key><integer>23</integer><key>Minute</key><integer>0</integer></dict>
+    </array>
+
+    <key>StandardOutPath</key>
+    <string>${PM_OS_HOME}/cache/midnight.log</string>
+    <key>StandardErrorPath</key>
+    <string>${PM_OS_HOME}/cache/midnight.err</string>
+</dict>
+</plist>

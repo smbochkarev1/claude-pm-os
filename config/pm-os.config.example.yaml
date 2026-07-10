@@ -20,7 +20,10 @@ sources:
     max_tasks: 500
 
   calendar:
-    adapter: adapters.stubs.calendar:MyCalendar          # implement for Google/Outlook
+    # provider: google  -> use the working Google Calendar adapter below.
+    # Default stays the stub so a fresh clone runs with no credentials.
+    adapter: adapters.stubs.calendar:MyCalendar          # implement for Outlook/CalDAV
+    # adapter: adapters.calendar_google:GoogleCalendar   # WORKING (Google Calendar; needs GOOGLE_* in .env)
     min_duration_minutes: 15
     fetch_transcripts: true
 
@@ -30,7 +33,10 @@ sources:
     activity_hours: 24
 
   transcript:
-    adapter: adapters.stubs.transcript:MyTranscriptSource  # implement for Zoom/Meet
+    # provider: zoom  -> use the working Zoom transcript adapter below.
+    # Default stays the stub so a fresh clone runs with no credentials.
+    adapter: adapters.stubs.transcript:MyTranscriptSource  # implement for Meet/Teams
+    # adapter: adapters.transcript_zoom:ZoomTranscript      # WORKING (Zoom; needs ZOOM_* in .env)
     retry_hours: 48
 
   sheets:

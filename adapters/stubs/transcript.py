@@ -1,9 +1,12 @@
 """STUB: meeting-transcript adapter.
 
-Implement `fetch_transcript` for your meeting provider (Zoom, Google Meet,
-Teams, or an internal ASR service). Return a `Transcript`, or None if the
-transcript is not ready yet — the transcript poller treats None as "retry
-later" and keeps the meeting in its pending queue.
+For Zoom there is a WORKING reference already —
+`adapters.transcript_zoom:ZoomTranscript`. Use this stub as the interface to
+implement other providers (Google Meet, Teams, or an internal ASR service).
+
+Implement `fetch_transcript`: return a `Transcript`, or None if the transcript
+is not ready yet — the transcript poller treats None as "retry later" and keeps
+the meeting in its pending queue.
 
 Guidance:
   - `meeting_id` matches the id on the CalendarEvent from your calendar adapter.

@@ -1,8 +1,11 @@
 """STUB: calendar adapter.
 
-Implement `fetch_events` (and optionally `fetch_attendees`) for your calendar
-(Google Calendar, Outlook/Graph, CalDAV, ...). Translate events into
-`CalendarEvent` records with tz-aware start/end.
+For Google Calendar there is a WORKING reference already —
+`adapters.calendar_google:GoogleCalendar`. Use this stub as the interface to
+implement other calendars (Outlook/Graph, CalDAV, ...).
+
+Implement `fetch_events` (and optionally `fetch_attendees`) for your calendar.
+Translate events into `CalendarEvent` records with tz-aware start/end.
 
 Guidance:
   - Skip all-day and out-of-office entries, or mark them via `kind`.

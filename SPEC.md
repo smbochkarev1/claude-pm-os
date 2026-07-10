@@ -45,10 +45,25 @@ Shipped working:
   markdown→chat formatters.
 - `adapters/spreadsheet_gspread.py::GspreadSpreadsheet` — Google Sheets read/write
   via gspread + OAuth.
+- `adapters/calendar_google.py::GoogleCalendar` — Google Calendar events via the
+  Calendar v3 API + google-auth (OAuth user token or service account, scope
+  `calendar.readonly`). Handles pagination, all-day vs timed, tz-aware datetimes,
+  attendee mapping, and extracts a Zoom meeting number off the event's conference
+  data so `meeting → follow-up` chains through to the Zoom adapter.
+- `adapters/transcript_zoom.py::ZoomTranscript` — Zoom meeting transcripts via
+  Server-to-Server OAuth: mints a bearer, finds the `TRANSCRIPT` (VTT) recording
+  file, downloads and parses it to clean speaker text. Returns None (retry-later)
+  when the transcript isn't ready.
+
+The pure transform functions of the last two (`parse_event`/`parse_events` and
+`parse_vtt`) are network-free and covered by `tests/test_adapters.py`; the
+HTTP/auth plumbing is thin and lazily-imported so the parse tests run with no
+credentials.
 
 Stubs (interface + implementation guidance) under `adapters/stubs/`:
-`task_tracker.py`, `calendar.py`, `chat_source.py`, `transcript.py`. Copy one,
-keep the class name, implement the one abstract method for your tool.
+`task_tracker.py`, `calendar.py` (Outlook/CalDAV), `chat_source.py`,
+`transcript.py` (Meet/Teams). Copy one, keep the class name, implement the one
+abstract method for your tool.
 
 Adapters are named in config as `"module.path:ClassName"` and instantiated by
 `core/runtime.py::load_adapter`, so no engine or worker hard-codes a vendor.
@@ -125,6 +140,11 @@ Deterministic, offline, CI-friendly. Scores the six-bucket signal classifier
 against golden labels and the backlog dedup against golden merged keys/counts,
 printing a pass-rate and exiting non-zero on any regression. Grow it with a
 fixture + golden pair each time you find a real miss.
+
+`tests/` (pytest) complements it with unit tests for the working adapters'
+transform logic — Google Calendar payload → `CalendarEvent`, Zoom VTT → clean
+text — also offline and credential-free. CI runs the harness (`evals.yml`) and
+pytest (`tests.yml`) on every push.
 
 ## 9. Meeting prep (pattern — extension point)
 

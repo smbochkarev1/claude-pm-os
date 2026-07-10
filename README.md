@@ -1,6 +1,7 @@
 # claude-pm-os — a PM Operating System on Claude Code
 
 [![evals](https://github.com/smbochkarev1/claude-pm-os/actions/workflows/evals.yml/badge.svg)](https://github.com/smbochkarev1/claude-pm-os/actions/workflows/evals.yml)
+&nbsp;[![tests](https://github.com/smbochkarev1/claude-pm-os/actions/workflows/tests.yml/badge.svg)](https://github.com/smbochkarev1/claude-pm-os/actions/workflows/tests.yml)
 &nbsp;![python](https://img.shields.io/badge/python-3.12-blue)
 &nbsp;![license](https://img.shields.io/badge/license-MIT-green)
 
@@ -53,12 +54,12 @@ flowchart LR
         TS[Transcripts]
         ME[Metrics]
     end
-    subgraph Adapters["Adapters (swappable)"]
+    subgraph Adapters["Adapters (swappable; ✓ = working reference ships)"]
         A1[TaskTracker]
-        A2[Calendar]
-        A3[Spreadsheet]
+        A2["Calendar ✓ Google"]
+        A3["Spreadsheet ✓ Sheets"]
         A4[ChatSource]
-        A5[TranscriptSource]
+        A5["TranscriptSource ✓ Zoom"]
         A6[MetricsAdapter]
     end
     subgraph Core["Core engines (pure, vendor-agnostic)"]
@@ -145,14 +146,26 @@ python -m pip install -r requirements.txt
 python eval-harness/run_evals.py                      # sanity check: 100% pass
 ```
 
-Then hand the repo to Claude Code:
+**Working out of the box (Google + Zoom).** Three adapters shipped working from
+day one (Google Sheets, Telegram, LLM); two more now ship as working reference
+implementations — **Google Calendar** (`adapters/calendar_google.py`) and **Zoom
+transcripts** (`adapters/transcript_zoom.py`). Point the calendar/transcript
+`adapter:` lines in `config/pm-os.config.yaml` at them (commented examples are in
+the `.example`), fill the `GOOGLE_*` / `ZOOM_*` vars in `.env`, and the
+**calendar → debrief** and **meeting → follow-up** paths run end-to-end on a real
+stack — no "Claude will write it" step. A Google Calendar event carrying a Zoom
+link flows straight through: the poller reads the Zoom meeting number off the
+event and the Zoom adapter pulls that meeting's transcript.
 
-> "Set up my PM OS. Wire my tracker (Jira), calendar (Google), and sheets. Use
-> the stub adapters in `adapters/stubs/` as the interface, and my tokens from
-> `.env`. Then run `/debrief` for today."
+Then hand the repo to Claude Code for the rest of your stack:
 
-Claude reads the stubs, implements the adapters for your stack, and drives the
-`commands/` from there.
+> "Set up my PM OS. Calendar (Google) and transcripts (Zoom) already have working
+> adapters — just wire them in config and my `.env`. Wire my tracker (Jira) and
+> chat (Slack) using the stub adapters in `adapters/stubs/` as the interface.
+> Then run `/debrief` for today."
+
+Claude reads the stubs, implements the remaining adapters for your stack, and
+drives the `commands/` from there.
 
 ## 7. Team use
 
@@ -185,12 +198,18 @@ python eval-harness/run_evals.py
 Add a fixture + golden pair whenever you hit a real misclassification; the
 harness turns "it felt wrong" into a regression test.
 
+Alongside it, `tests/` holds pytest unit tests for the working adapters'
+transform logic — Google Calendar event → `CalendarEvent` and Zoom VTT → clean
+transcript text — run offline with no network or credentials (`pytest -q`, also
+in CI via `tests.yml`).
+
 ## 9. Design decisions
 
 - **Adapters over integrations.** A PM's stack is personal. Engines depend only
   on small interfaces (`adapters/base.py`); swapping Jira→Linear is one adapter,
-  not a refactor. Three adapters ship working (Google Sheets, Telegram Bot,
-  LLM); the rest are documented stubs.
+  not a refactor. Five adapters ship as working reference implementations (Google
+  Sheets, Google Calendar, Zoom transcripts, Telegram Bot, LLM); the rest are
+  documented stubs.
 - **Prompts are externalized.** Classification and follow-up prompts live in
   `prompts/*.md`, versioned and diffable — you tune wording without touching code.
 - **Config / engine separation.** All source "dirt" (header offsets, column
@@ -208,13 +227,14 @@ harness turns "it felt wrong" into a regression test.
 ## Repo layout
 
 ```
-adapters/    base interfaces + 3 working adapters (sheets, telegram, llm) + stubs
+adapters/    base interfaces + 5 working adapters (sheets, calendar, zoom, telegram, llm) + stubs
 core/        classifier, backlog_engine, weekly_engine, followup_engine, runtime
 workers/     midnight, transcript_poller, metrics_watch, build_backlog + launchd
 commands/    /debrief /recap /backlog /debrief_week /recap_week /debrief-backlog
 prompts/     externalized LLM prompts (classify, followup)
 config/      *.example.yaml + holidays.example.json
 eval-harness/ fixtures + golden + run_evals.py
+tests/       pytest unit tests for adapter transform logic (offline)
 scripts/     send.py (notifier CLI), build_dist.sh (leak guard)
 ```
 

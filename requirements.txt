@@ -2,8 +2,13 @@
 # These are needed for the shipped Google Sheets adapter and YAML config.
 PyYAML>=6.0
 
-# Only for adapters.spreadsheet_gspread (Google Sheets). Omit if you don't use it.
+# Only for the Google adapters (Sheets + Calendar). Omit if you don't use them.
 gspread>=6.0.0
 google-auth>=2.23.0
+google-auth-oauthlib>=1.2.0       # only if you mint the OAuth user token locally
+google-api-python-client>=2.100.0 # adapters.calendar_google (Calendar v3)
+
+# Only for adapters.transcript_zoom (Zoom Server-to-Server OAuth + downloads).
+requests>=2.31.0
 
 # The eval harness and the LLM/notifier adapters need nothing beyond stdlib.

@@ -44,56 +44,49 @@ doesn't scale.
 
 ## 3. Architecture
 
+Three independent pipelines, one notifier:
+
 ```mermaid
 flowchart LR
-    subgraph Sources
-        TR[Tracker]
-        CA[Calendar]
-        SH[Spreadsheets]
-        CH[Chat]
-        TS[Transcripts]
-        ME[Metrics]
+    subgraph DAILY["Daily pipeline"]
+        direction LR
+        TR[Tracker] --> CL
+        CA["Calendar ✓ Google"] --> CL
+        CH[Chat] --> CL
+        SH["Spreadsheets ✓ Sheets"] --> CL
+        CL["classifier · 6 buckets"] --> LD[LLM]
+        LD --> D["debrief.md"]
+        D --> BE["backlog_engine<br/>normalize · dedup · sort"] --> BS[("backlog sheet")]
+        D --> WE[weekly_engine] --> WD["weekly digest"]
     end
-    subgraph Adapters["Adapters (swappable; ✓ = working reference ships)"]
-        A1[TaskTracker]
-        A2["Calendar ✓ Google"]
-        A3["Spreadsheet ✓ Sheets"]
-        A4[ChatSource]
-        A5["TranscriptSource ✓ Zoom"]
-        A6[MetricsAdapter]
-    end
-    subgraph Core["Core engines (pure, vendor-agnostic)"]
-        C1[classifier<br/>6 buckets]
-        C2[backlog_engine<br/>normalize·dedup·sort]
-        C3[weekly_engine]
-        C4[followup_engine]
-    end
-    subgraph Outputs
-        O1[debriefs/*.md]
-        O2[backlog sheet]
-        O3[weekly digest]
-        O4[follow-ups]
-    end
-    N[Notifier]
-    L[LLM]
 
-    TR-->A1-->C1
-    CA-->A2-->C1
-    SH-->A3-->C2
-    CH-->A4-->C1
-    TS-->A5-->C4
-    ME-->A6
-    C1-->O1-->N
-    C2-->O2
-    C3-->O3-->N
-    C4-->O4-->N
-    A6-->N
-    C1-.->L
-    C4-.->L
+    subgraph MEET["Meeting pipeline · parallel"]
+        direction LR
+        TS[Transcripts] --> ZM["TranscriptSource ✓ Zoom"] --> LM[LLM] --> PM["followup_engine · postmeet"]
+    end
+
+    subgraph WATCH["Metrics watch · parallel"]
+        direction LR
+        ME[Metrics] --> MA["MetricsAdapter<br/>digest + watchdog"]
+    end
+
+    N["Notifier → Telegram / Slack"]
+    D --> N
+    WD --> N
+    PM --> N
+    MA --> N
 ```
 
-Sources → adapters → core engines → outputs → notifier. The engines never import
-a vendor SDK; they speak only the canonical dataclasses in `adapters/base.py`.
+**Daily** — Tracker, Calendar, Chat and Sheets feed the `classifier`, which (through
+the LLM) writes one `debrief.md`. That single file is delivered as the daily digest
+and drives the backlog engine (→ backlog sheet) and the weekly roll-up.
+**Meeting** — a Zoom transcript flows through the LLM into the follow-up (postmeet)
+engine. **Metrics watch** — a standalone digest + freshness watchdog.
+
+Metrics and transcripts deliberately bypass the classifier — they're their own
+pipelines, not part of the daily debrief. The core engines never import a vendor
+SDK; they speak only the canonical dataclasses in `adapters/base.py`, so any source
+is swapped by writing an adapter.
 
 ## 4. Impact
 

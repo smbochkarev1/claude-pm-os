@@ -215,6 +215,21 @@ in CI via `tests.yml`).
   quietly dropped. The midnight fallback and the transcript retry queue exist so
   gaps get filled, not hidden.
 
+## 10. Limitations
+
+- **Two paths run end-to-end; the rest of your stack is stubs.** Google Calendar +
+  Zoom transcripts ship working, but your tracker/chat adapters are documented
+  stubs Claude implements against your stack — not turnkey integrations.
+- **The Impact figures are the author's estimate — decomposed, but not benchmarked.**
+  The ~20–30 h/week is a self-reported reconstruction of manual effort avoided,
+  broken down source-by-source in §4. It's an honest estimate grounded in that
+  decomposition, not a measured or independently generalizable result.
+- **LLM refinement is non-deterministic.** The rule-based signal layer is evaluated
+  and stable; the LLM pass on top can vary run to run. The eval harness scores only
+  the deterministic layer.
+- **Single-user, local orchestration.** Runs on your machine under launchd/cron;
+  each teammate installs their own copy. No shared server, no central datastore.
+
 ---
 
 ## Repo layout
